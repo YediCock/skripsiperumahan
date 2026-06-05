@@ -14,7 +14,7 @@
         
                         <nav class="breadcrumb-style-one" aria-label="breadcrumb">
                             <ol class="breadcrumb">
-                                <li class="breadcrumb-item "><a href="{{ route('listAdmin') }}" wire:navigate>List Admin</a></li>
+                                <li class="breadcrumb-item "><a href="{{ route('listUser') }}" wire:navigate>List Admin</a></li>
                                 <li class="breadcrumb-item active" aria-current="page">Edit list admin {{ $admin->name }}</li>
                             </ol>
                         </nav>
