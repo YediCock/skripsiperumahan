@@ -1,4 +1,4 @@
-<div class="">
+<div>
     <!-- Header Started -->
     <section class="bg-primary-10">
     <div class="h-auto w-full bg-cover bg-center bg-no-repeat"

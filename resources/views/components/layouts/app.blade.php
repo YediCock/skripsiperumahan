@@ -15,7 +15,7 @@
         <nav class="container flex items-center justify-between px-3 2xl:px-0">
             <div>
                 <a href="/">
-                <img src="logo.jpeg" width="75" alt="Homelist" class="shrink-0" />
+                <img src="/logo.jpeg" width="75" alt="Homelist" class="shrink-0" />
                 </a>
             </div>
             <div class="flex items-center gap-x-6 text-nature-500">
