@@ -1,0 +1,1 @@
+cURL error 77: error setting certificate file: D:\Projects\Laragon-installer\8.0-W64\etc\ssl\cacert.pem (see https://curl.haxx.se/libcurl/c/libcurl-errors.html) for https://api.fonnte.com/send
