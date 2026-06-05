@@ -11,7 +11,7 @@ Clone project
 Buka direktori projek
 
 ```bash
-  cd perumahan
+  cd skripsiperumahan
 ```
 
 Selanjutnya ketikan perintah
