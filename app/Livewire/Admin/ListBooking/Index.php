@@ -18,6 +18,7 @@ class Index extends Component
     public function render()
     {
         $bookings = Booking::latest()->search($this->search)->paginate(10);
+        // dd($bookings);
         return view('livewire.admin.list-booking.index', compact('bookings'));
     }
     public function deleteBooking($id)

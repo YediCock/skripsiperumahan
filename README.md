@@ -5,7 +5,7 @@
 Clone project
 
 ```bash
-  git clone https://github.com/yogabagaskurniawan/perumahan.git
+  git clone https://github.com/YediCock/skripsiperumahan.git
 ```
 
 Buka direktori projek
