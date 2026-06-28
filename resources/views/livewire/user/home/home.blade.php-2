@@ -1,7 +1,7 @@
 <div class="">
 <!-- Hero section start -->
 <section class="w-full overflow-hidden px-3 pb-6 md:pb-8 lg:pb-12 xl:pb-16 2xl:px-0"
-    style="background-image: url('https://faniindrasaputra.my.id/storage/images/sliders/tAaYtMsvP6vM3aNeKFwv.webp'); background-size: cover; ">
+    style="background-image: url('http://127.0.0.1:8000/storage/images/sliders/tAaYtMsvP6vM3aNeKFwv.webp'); background-size: cover; ">
     <div class="relative w-full">
         <div
             class="container flex flex-1 flex-col items-center justify-center gap-y-3 py-16 md:items-start md:gap-y-4 md:py-28 lg:gap-y-6 lg:py-36 xl:gap-y-8 xl:py-40 2xl:py-52">
