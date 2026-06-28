@@ -16,6 +16,14 @@
                 </div>
             </a>
         </x-nav-link-admin>
+        <x-nav-link-admin :active="Str::contains(request()->url(), 'block')">
+            <a href="{{ route('blockIndex') }}" aria-expanded="false" class="dropdown-toggle" wire:navigate>
+                <div class="">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-grid"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                    <span>Blok</span>
+                </div>
+            </a>
+        </x-nav-link-admin>
         <x-nav-link-admin :active="Str::contains(request()->url(), 'home-list')">
             <a href="{{ route('homeList') }}" aria-expanded="false" class="dropdown-toggle" wire:navigate>
                 <div class="">
@@ -32,6 +40,23 @@
                 </div>
             </a>
         </x-nav-link-admin>
+        <li class="menu {{ Str::contains(request()->url(), 'admin/faq') ? 'active' : '' }}">
+            <a href="#submenuFaq" data-bs-toggle="collapse" aria-expanded="{{ Str::contains(request()->url(), 'admin/faq') ? 'true' : 'false' }}" class="dropdown-toggle">
+                <div class="">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-help-circle"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                    <span>FAQ</span>
+                </div>
+                <div><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right"><polyline points="9 18 15 12 9 6"></polyline></svg></div>
+            </a>
+            <ul class="collapse submenu list-unstyled {{ Str::contains(request()->url(), 'admin/faq') ? 'show' : '' }}" id="submenuFaq">
+                <li class="{{ request()->routeIs('faqIndex') || request()->routeIs('faqAdd') || request()->routeIs('faqEdit') ? 'active' : '' }}">
+                    <a href="{{ route('faqIndex') }}" wire:navigate>List FAQ</a>
+                </li>
+                <li class="{{ request()->routeIs('faqCategoryIndex') || request()->routeIs('faqCategoryAdd') || request()->routeIs('faqCategoryEdit') ? 'active' : '' }}">
+                    <a href="{{ route('faqCategoryIndex') }}" wire:navigate>Kategori FAQ</a>
+                </li>
+            </ul>
+        </li>
         <x-nav-link-admin :active="Str::contains(request()->url(), 'setting')">
             <a href="{{ route('setting') }}" aria-expanded="false" class="dropdown-toggle" wire:navigate>
                 <div class="">
@@ -40,6 +65,19 @@
                 </div>
             </a>
         </x-nav-link-admin>
+        <li class="menu">
+            <a href="javascript:void(0);" class="dropdown-toggle"
+               onclick="document.getElementById('admin-logout-form').submit()">
+                <div class="">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-log-out"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+                    <span>Logout</span>
+                </div>
+            </a>
+        </li>
     </ul>
-    
+    <form id="admin-logout-form" method="POST" action="{{ route('admin.logout') }}" style="display:none;">
+        @csrf
+    </form>
+    </ul>
+
 </div>

@@ -299,26 +299,22 @@
             </div>
 
             @if ($homes->status == 'terjual' || $homes->status == 'tersewa')
-                <button
-                    class="uppercase mx-auto size-fit rounded-full bg-secondary px-[30px] py-2.5 text-center font-poppins text-lg font-medium text-white">
-                    {{ $homes->status }}
+                <button disabled
+                    class="uppercase mx-auto size-fit rounded-full bg-gray-400 px-[30px] py-2.5 text-center font-poppins text-lg font-medium text-white cursor-not-allowed">
+                    {{ $homes->status == 'terjual' ? 'Sudah Terjual' : 'Sudah Tersewa' }}
                 </button>
-            @elseif ($homes->bookings->isEmpty() || $homes->bookings->last()->status == 'pending')
-                @if (session()->has('phone') && session()->has('name'))
-                    <button wire:click="pesan"
-                        class="uppercase mx-auto size-fit rounded-full bg-secondary px-[30px] py-2.5 text-center font-poppins text-lg font-medium text-white">
-                        Pesan
-                    </button>
-                @else
-                    <button wire:click="pesan"
-                        class="uppercase mx-auto size-fit rounded-full bg-secondary px-[30px] py-2.5 text-center font-poppins text-lg font-medium text-white">
-                        Pesan
-                    </button>
-                @endif
+            @elseif ($alreadyBooked)
+                <button disabled
+                    class="uppercase mx-auto size-fit rounded-full bg-gray-400 px-[30px] py-2.5 text-center font-poppins text-lg font-medium text-white cursor-not-allowed flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                    </svg>
+                    Sudah Dipesan
+                </button>
             @else
-                <button
-                    class="uppercase mx-auto size-fit rounded-full bg-secondary px-[30px] py-2.5 text-center font-poppins text-lg font-medium text-white">
-                    Sudah dipesan
+                <button wire:click="pesan"
+                    class="uppercase mx-auto size-fit rounded-full bg-secondary px-[30px] py-2.5 text-center font-poppins text-lg font-medium text-white hover:opacity-90 transition">
+                    Pesan
                 </button>
             @endif
             

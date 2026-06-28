@@ -11,6 +11,8 @@ class HomeList extends Model
     use HasFactory;
     protected $fillable = [
         'category_id',
+        'block_id',
+        'unit_number',
         'name',
         'slug',
         'desc',
@@ -31,6 +33,11 @@ class HomeList extends Model
     public function homeCategory()
     {
         return $this->belongsTo(HomeCategory::class, 'category_id', 'id');
+    }
+
+    public function block()
+    {
+        return $this->belongsTo(Block::class, 'block_id', 'id');
     }
     public function getPriceAttribute()
     {

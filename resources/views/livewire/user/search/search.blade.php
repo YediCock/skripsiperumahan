@@ -44,9 +44,7 @@
     
         <div class="flex w-full items-center rounded-full border border-new-200 px-4 sm:w-1/2 md:w-1/4 lg:w-[300px]">
             <i class="fa-solid fa-layer-group text-[#777777]"></i>
-            @php
-                $currentSlug = request()->segment(2); // Ambil 'rumah' dari /search/rumah
-            @endphp
+            @php $currentSlug = request()->segment(2); @endphp
             <select onchange="if (this.value) window.location.href=this.value"
                 class="block w-full rounded-lg border-0 bg-white p-2.5 text-sm text-gray-900 !shadow-none focus:border-0 focus:ring-0">
                 <option value="{{ route('search') }}" {{ $currentSlug == null ? 'selected' : '' }}>Semua Jenis</option>
@@ -55,8 +53,21 @@
                         {{ $ctg->name }}
                     </option>
                 @endforeach
-            </select>        
+            </select>
         </div>
+
+        @if(count($availableBlocks) > 0)
+        <div class="flex w-full items-center rounded-full border border-new-200 px-4 sm:w-1/2 md:w-1/4 lg:w-[220px]">
+            <i class="fa-solid fa-grid-2 text-[#777777]"></i>
+            <select wire:model.live="filterBlock"
+                class="block w-full rounded-lg border-0 bg-white p-2.5 text-sm text-gray-900 !shadow-none focus:border-0 focus:ring-0">
+                <option value="">Semua Blok</option>
+                @foreach($availableBlocks as $blok)
+                    <option value="{{ $blok['id'] }}">{{ $blok['name'] }}</option>
+                @endforeach
+            </select>
+        </div>
+        @endif
     
         <div wire:ignore class="flex w-full items-center rounded-full border border-new-200 px-4 sm:w-1/2 md:w-1/4 lg:flex-1">
             <i class="fa-solid fa-magnifying-glass text-[#777777]"></i>
@@ -68,29 +79,34 @@
     <div class="gap-30 section-padding-t grid w-full sm:grid-cols-2 md:grid-cols-3">
         @forelse ($latestHomes as $home)
         <div class="h5-description-card">
-            <div class="h5-description-img">
-                <img src="{{ asset('storage/images/detailHomeImages/' . $home->homeImage[0]->image) }}" alt="Homelist5_desc" />
+            <div class="h5-description-img relative">
+                <img src="{{ $home->homeImage->count() ? asset('storage/images/detailHomeImages/' . $home->homeImage->first()->image) : asset('blank.png') }}" alt="{{ $home->name }}" />
+                @if($home->block && $home->unit_number)
+                <span class="absolute top-2 left-2 bg-secondary text-white text-xs font-semibold px-2 py-0.5 rounded">
+                    {{ $home->block->name }} - {{ $home->unit_number }}
+                </span>
+                @endif
             </div>
             <div class="h5-description-body !bg-new-100">
                 <a class="title" href="{{ url('search/detail/'.$home->slug) }}">{{ $home->name }}</a>
-                <p>Lt {{ $home->land_area }}&nbsp;m<sup>2</sup>, Lb {{ $home->building_area }}&nbsp;m<sup>2</sup></p>
+                <p class="text-xs text-gray-500">{{ $home->homeCategory->name }}@if($home->homeCategory->address) &bull; {{ $home->homeCategory->address }}@endif</p>
+                <div class="flex items-center gap-3 text-xs text-gray-600 mt-1 mb-1">
+                    <span><i class="fa-solid fa-bed text-primary mr-0.5"></i> {{ $home->number_of_bedrooms }} KT</span>
+                    <span><i class="fa-solid fa-bath text-primary mr-0.5"></i> {{ $home->number_of_bathrooms }} KM</span>
+                    <span><i class="fa-solid fa-expand text-primary mr-0.5"></i> {{ $home->land_area }}/{{ $home->building_area }} m²</span>
+                </div>
                 <div class="h5-description-icons">
-                <div style="display: flex; justify-content: start; width: 100%;">
-                    <span class="uppercase">{{ $home->status }}</span>
+                    <div style="display: flex; justify-content: start; width: 100%;">
+                        <span class="uppercase">{{ $home->status }}</span>
+                    </div>
                 </div>
-                </div>
-    
                 <div class="h5-description-footer">
-                <span>
-                    {{ $home->getPriceAttribute() }}
-                    @if ($home->homeCategory->slug == 'sewa')
-                        Juta / bulan
-                    @else
-                        Juta
-                    @endif
-                </span>
-                <a href="{{ url('search/detail/'.$home->slug) }}">View Details
-                    <i class="fa-solid fa-arrow-right-long text-secondary"></i></a>
+                    <span>
+                        {{ $home->getPriceAttribute() }}
+                        @if ($home->homeCategory->slug == 'sewa') Juta / bulan @else Juta @endif
+                    </span>
+                    <a href="{{ url('search/detail/'.$home->slug) }}">Lihat Detail
+                        <i class="fa-solid fa-arrow-right-long text-secondary"></i></a>
                 </div>
             </div>
         </div>

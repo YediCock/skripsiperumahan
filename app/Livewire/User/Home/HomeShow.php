@@ -110,12 +110,21 @@ class HomeShow extends Component
     {
         $user = auth()->user();
         $slug = $this->slug;
-        $homes = HomeList::where('slug', $this->slug)->firstOrFail();
+        $homes    = HomeList::where('slug', $this->slug)->firstOrFail();
         $kategori = $homes->homeCategory->id;
-        // Ambil semua properti lainnya dengan kategori yang sama
         $propertiSamaKategori = HomeList::where('category_id', $kategori)->take(10)->get();
-     
-        return view('livewire.user.home.home-show', compact('homes', 'propertiSamaKategori','slug'));
+
+        $alreadyBooked = false;
+        if (auth()->check()) {
+            $customer = \App\Models\Customer::where('user_id', auth()->id())->first();
+            if ($customer) {
+                $alreadyBooked = \App\Models\Booking::where('home_id', $homes->id)
+                    ->where('customer_id', $customer->id)
+                    ->exists();
+            }
+        }
+
+        return view('livewire.user.home.home-show', compact('homes', 'propertiSamaKategori', 'slug', 'alreadyBooked'));
     }
     public function openForm()
     {

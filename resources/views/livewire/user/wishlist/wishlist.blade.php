@@ -34,7 +34,7 @@
             @forelse ($wishlists as $wishlist)
             <div class="h5-description-card">
                 <div class="group relative h-auto w-full overflow-hidden rounded-t-[20px]">
-                    <img src="{{ asset('storage/images/detailHomeImages/' . $wishlist->homeList->homeImage[0]->image) }}"
+                    <img src="{{ $wishlist->homeList->homeImage->count() ? asset('storage/images/detailHomeImages/' . $wishlist->homeList->homeImage->first()->image) : asset('blank.png') }}"
                         class="h-full max-h-[250px] w-full object-cover transition-all duration-700 ease-in-out group-hover:scale-[1.15]" />
                 </div>
                 <div class="h5-description-body !bg-new-100">

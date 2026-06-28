@@ -56,7 +56,7 @@
                             {{ $booking->status }}
                         </div>
                     @endif
-                    <img src="{{ asset('storage/images/detailHomeImages/' . $booking->homeList->homeImage[0]->image) }}"
+                    <img src="{{ $booking->homeList->homeImage->count() ? asset('storage/images/detailHomeImages/' . $booking->homeList->homeImage->first()->image) : asset('blank.png') }}"
                         class="h-full max-h-[250px] w-full object-cover transition-all duration-700 ease-in-out group-hover:scale-[1.15]" />
                 </div>
                 <div class="h5-description-body !bg-new-100">

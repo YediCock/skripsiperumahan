@@ -3,18 +3,41 @@
 namespace App\Livewire\User\Search;
 
 use Livewire\Component;
+use App\Models\Block;
 use App\Models\HomeList;
 use App\Models\HomeCategory;
 
 class Search extends Component
 {
-    public $load = 6; 
+    public $load = 6;
     public $slug = '';
     public $sortingBy = 'default';
     public $search;
+    public $filterBlock = '';
+    public $availableBlocks = [];
+
     public function mount()
     {
         $this->search = request()->input('search');
+        $this->loadBlocks();
+    }
+
+    public function updatedSlug()
+    {
+        $this->filterBlock = '';
+        $this->loadBlocks();
+    }
+
+    private function loadBlocks()
+    {
+        if ($this->slug) {
+            $category = HomeCategory::where('slug', $this->slug)->first();
+            $this->availableBlocks = $category
+                ? Block::where('home_category_id', $category->id)->get()->toArray()
+                : [];
+        } else {
+            $this->availableBlocks = [];
+        }
     }
     public function loadMore(){
         $this->load += 6;
@@ -36,34 +59,32 @@ class Search extends Component
         }
 
         $categories = HomeCategory::latest()->get();
-        $nameSlug = null;
-        $latestHomes = HomeList::with('homeCategory')->latest()->take($this->load)->get();
-        $totalHomesCount = HomeList::with('homeCategory')->count();
+        $nameSlug   = null;
+
+        $query = HomeList::with(['homeCategory', 'homeImage', 'block']);
 
         if ($this->slug) {
             $category = HomeCategory::where('slug', $this->slug)->first();
             if ($category) {
-                $latestHomes = HomeList::with('homeCategory')->where('category_id', $category->id)
-                                ->take($this->load)
-                                ->get();
+                $query->where('category_id', $category->id);
                 $nameSlug = $category->name;
-                $totalHomesCount = HomeList::with('homeCategory')->where('category_id', $category->id)->count();
             } else {
-                $latestHomes = collect();
+                $query->whereRaw('0=1');
             }
         }
 
-        if ($this->search) {
-            $latestHomes = HomeList::with('homeCategory')->latest()
-                            ->where('name', 'like', '%'.$this->search.'%')
-                            ->take($this->load)
-                            ->get();
-            $totalHomesCount = HomeList::with('homeCategory')->where('name', 'like', '%'.$this->search.'%')->count();
+        if ($this->filterBlock) {
+            $query->where('block_id', $this->filterBlock);
         }
 
-        // Sort collection using sortBy()
-        $latestHomes = $latestHomes->sortBy($sortField, SORT_REGULAR, $sortType === 'desc');
+        if ($this->search) {
+            $query->where('name', 'like', '%'.$this->search.'%');
+        }
 
-        return view('livewire.user.search.search', compact('latestHomes','categories','nameSlug','totalHomesCount'));
+        $totalHomesCount = $query->count();
+        $latestHomes     = $query->latest()->take($this->load)->get()
+                                 ->sortBy($sortField, SORT_REGULAR, $sortType === 'desc');
+
+        return view('livewire.user.search.search', compact('latestHomes', 'categories', 'nameSlug', 'totalHomesCount'));
     }
 }

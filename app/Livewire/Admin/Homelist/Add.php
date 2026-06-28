@@ -5,6 +5,7 @@ namespace App\Livewire\Admin\Homelist;
 use Livewire\Component;
 use App\Models\HomeList;
 use App\Models\HomeImage;
+use App\Models\Block;
 use App\Models\HomeCategory;
 use Livewire\Attributes\Layout;
 use Livewire\WithFileUploads;
@@ -16,9 +17,17 @@ class Add extends Component
 {
     use LivewireAlert;
     use WithFileUploads;
-    public $name, $category, $price, $building_area, $land_area, $electrical_power, $number_of_bedrooms, $number_of_bathrooms, $status, $desc=""; 
+    public $name, $category, $block_id, $unit_number, $price, $building_area, $land_area, $electrical_power, $number_of_bedrooms, $number_of_bathrooms, $status, $desc="";
     public $homeImage, $sketch_image, $floorplan;
+    public $availableBlocks = [];
     #[Layout('components.layouts.admin')]
+
+    public function updatedCategory($value)
+    {
+        $this->availableBlocks = Block::where('home_category_id', $value)->get();
+        $this->block_id = null;
+    }
+
     public function save()
     {
         $validatedData = $this->validate([
@@ -33,9 +42,11 @@ class Add extends Component
             'status' => 'required|in:dijual,sewa',
             'desc' => 'required|string',
             'homeImage' => 'required|array|min:1|max:5',
-            'homeImage.*' => 'image|mimes:jpeg,png,jpg,webp|max:2048',            
+            'homeImage.*' => 'image|mimes:jpeg,png,jpg,webp|max:2048',
             'sketch_image' => 'required|image|mimes:jpeg,png,jpg,webp|max:2048',
             'floorplan' => 'required|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'block_id' => 'nullable|exists:blocks,id',
+            'unit_number' => 'nullable|string|max:20',
         ]);
 
         if ($validatedData) {
@@ -66,6 +77,8 @@ class Add extends Component
                 'name' => $this->name,
                 'slug' => Str::slug($this->name),
                 'category_id' => $this->category,
+                'block_id' => $this->block_id ?: null,
+                'unit_number' => $this->unit_number ?: null,
                 'price' => $this->price,
                 'building_area' => $this->building_area,
                 'land_area' => $this->land_area,
@@ -103,5 +116,10 @@ class Add extends Component
     {
         $homeCategories = HomeCategory::latest()->get();
         return view('livewire.admin.homelist.add', compact('homeCategories'));
+    }
+
+    public function mount()
+    {
+        $this->availableBlocks = collect();
     }
 }

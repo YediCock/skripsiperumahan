@@ -34,22 +34,52 @@
                     <div class="row mb-4">
                         <div class="col-sm-6">
                             <label>Nama Kategori</label>
-                            <input wire:model="name" type="text" class="form-control" id="post-title" placeholder="nama kategori" value="{{ $category->name ?? '' }}">
-                            @error('name') <span class="error text-danger ">{{ $message }}</span> @enderror 
+                            <input wire:model="name" type="text" class="form-control" placeholder="nama kategori">
+                            @error('name') <span class="error text-danger">{{ $message }}</span> @enderror
+                        </div>
+                        <div class="col-sm-6">
+                            <label>Alamat / Lokasi</label>
+                            <input wire:model="address" type="text" class="form-control" placeholder="contoh: Jl. Raya Batang No.1, Batang">
+                            @error('address') <span class="error text-danger">{{ $message }}</span> @enderror
                         </div>
                     </div>
                     <div class="row mb-4">
-                        <div class="col-sm-6">
+                        <div class="col-sm-4">
                             <label>Upload Gambar Kategori</label>
-                            <p class="text-danger">ukuran gambar maksimal 136 x 136</p>
-                            <input wire:ignore wire:model="image"  type="file" name="image" id="imageSketsa" class="form-control @error('image') has-error @enderror" placeholder="image" onchange="previewSketsa('.imageDemo1', this.files[0])">
-                            <div wire:ignore class="col-md mt-3">
-                                <input type="hidden" name="oldImage" value="{{ $category->image }}">
+                            <p class="text-danger mb-1">ukuran gambar maksimal 136 x 136</p>
+                            <input wire:ignore wire:model="image" type="file" class="form-control" onchange="previewSketsa('.imageDemo1', this.files[0])">
+                            <div wire:ignore class="mt-2">
                                 @if ($category->image)
-                                    <img src="{{ asset('storage/images/categories/'.$category->image) }}" class="img-preview img-fluid mb-3 col-sm-5 d-block imageDemo1">   
+                                    <img src="{{ asset('storage/images/categories/'.$category->image) }}" class="img-preview img-fluid col-sm-5 d-block imageDemo1">
+                                @else
+                                    <img src="" alt="" class="img-preview img-fluid col-sm-5 d-block imageDemo1">
                                 @endif
                             </div>
-                            @error('image') <span class="error text-danger ">{{ $message }}</span> @enderror 
+                            @error('image') <span class="error text-danger">{{ $message }}</span> @enderror
+                        </div>
+                        <div class="col-sm-4">
+                            <label>Upload Brosur Perumahan <span class="text-muted">(opsional)</span></label>
+                            <input wire:ignore wire:model="brochure_image" type="file" class="form-control" onchange="previewSketsa('.imageDemo2', this.files[0])">
+                            <div wire:ignore class="mt-2">
+                                @if ($category->brochure_image)
+                                    <img src="{{ asset('storage/images/categories/'.$category->brochure_image) }}" class="img-preview img-fluid col-sm-5 d-block imageDemo2">
+                                @else
+                                    <img src="" alt="" class="img-preview img-fluid col-sm-5 d-block imageDemo2">
+                                @endif
+                            </div>
+                            @error('brochure_image') <span class="error text-danger">{{ $message }}</span> @enderror
+                        </div>
+                        <div class="col-sm-4">
+                            <label>Upload Site Plan / Denah Kawasan <span class="text-muted">(opsional)</span></label>
+                            <input wire:ignore wire:model="site_plan_image" type="file" class="form-control" onchange="previewDenah('.imageDemo3', this.files[0])">
+                            <div wire:ignore class="mt-2">
+                                @if ($category->site_plan_image)
+                                    <img src="{{ asset('storage/images/categories/'.$category->site_plan_image) }}" class="img-preview img-fluid col-sm-5 d-block imageDemo3">
+                                @else
+                                    <img src="" alt="" class="img-preview img-fluid col-sm-5 d-block imageDemo3">
+                                @endif
+                            </div>
+                            @error('site_plan_image') <span class="error text-danger">{{ $message }}</span> @enderror
                         </div>
                     </div>
 

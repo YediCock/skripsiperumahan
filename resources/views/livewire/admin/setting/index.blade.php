@@ -56,13 +56,21 @@
                                 <tr>
                                     <td>Logo Perumahan</td>
                                     <td>
-                                        <img src="{{ asset('storage/images/settings/' . $setting[0]->image_logo) }}" class="img-fluid" alt="" style="width: 250px">
+                                        @if($setting[0]->image_logo)
+                                            <img src="{{ asset('storage/images/settings/' . $setting[0]->image_logo) }}" class="img-fluid" alt="" style="width: 250px">
+                                        @else
+                                            <span class="text-muted">Belum ada logo</span>
+                                        @endif
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td>Gambar Promasi</td>
+                                    <td>Gambar Promosi</td>
                                     <td>
-                                        <img src="{{ asset('storage/images/settings/' . $setting[0]->image_promotion) }}" class="img-fluid" alt="" style="width: 250px">
+                                        @if($setting[0]->image_promotion)
+                                            <img src="{{ asset('storage/images/settings/' . $setting[0]->image_promotion) }}" class="img-fluid" alt="" style="width: 250px">
+                                        @else
+                                            <span class="text-muted">Belum ada gambar promosi</span>
+                                        @endif
                                     </td>
                                 </tr>
                                 <tr>
