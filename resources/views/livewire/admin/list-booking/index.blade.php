@@ -75,7 +75,7 @@
                                     <td>{{ $booking->status}}</td>
                                     <td class="text-center">
                                         <div class="action-btns">
-                                            <a wire:navigate href="{{ route('listBookingEdit', $booking->id) }}" class=" me-2" data-toggle="tooltip" data-placement="top" title="whatsapp">
+                                            <a wire:navigate href="{{ route('listBookingEdit', $booking->id) }}" class="me-2" data-toggle="tooltip" data-placement="top" title="Kirim Pesan">
                                                 Kirim Pesan
                                             </a>
                                             <a wire:navigate href="{{ route('listBookingEdit', $booking->id) }}" class="action-btn btn-edit bs-tooltip me-2" data-toggle="tooltip" data-placement="top" title="Edit">

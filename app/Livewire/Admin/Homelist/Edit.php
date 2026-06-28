@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Admin\Homelist;
 
+use App\Models\Block;
 use App\Models\HomeCategory;
 use App\Models\HomeImage;
 use Livewire\Component;
@@ -19,10 +20,11 @@ class Edit extends Component
     use LivewireAlert;
     use WithFileUploads;
     #[Layout('components.layouts.admin')]
-    public $name, $category, $price, $building_area, $land_area, $electrical_power, $number_of_bedrooms, $number_of_bathrooms, $status, $desc; 
+    public $name, $category, $block_id, $unit_number, $price, $building_area, $land_area, $electrical_power, $number_of_bedrooms, $number_of_bathrooms, $status, $desc;
     public $homeImage, $sketch_image, $floorplan;
     public $id;
     public $homes;
+    public $availableBlocks = [];
     public function mount($id)
     {
         // Ambil data rumah dari database berdasarkan ID
@@ -38,17 +40,21 @@ class Edit extends Component
             $this->number_of_bedrooms = $this->homes->number_of_bedrooms;
             $this->number_of_bathrooms = $this->homes->number_of_bathrooms;
             $this->status = $this->homes->status;
-            $this->desc = $this->homes->desc;
-            
-            $this->desc = $this->homes->desc;
+            $this->desc       = $this->homes->desc;
+            $this->block_id   = $this->homes->block_id;
+            $this->unit_number = $this->homes->unit_number;
 
-            // price
-            $value = $this->homes->price ?? ''; 
-            $price = preg_replace('/[^0-9]/', '', $value);
-            $this->price = $price;
+            $value = $this->homes->price ?? '';
+            $this->price = preg_replace('/[^0-9]/', '', $value);
 
-
+            $this->availableBlocks = Block::where('home_category_id', $this->homes->category_id)->get();
         }
+    }
+
+    public function updatedCategory($value)
+    {
+        $this->availableBlocks = Block::where('home_category_id', $value)->get();
+        $this->block_id = null;
     }
     public function deleteImage($idImage)
     {
@@ -81,6 +87,8 @@ class Edit extends Component
             'desc' => 'required',
             'sketch_image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'floorplan' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'block_id' => 'nullable|exists:blocks,id',
+            'unit_number' => 'nullable|string|max:20',
         ]);
 
         if ($validatedData) {
@@ -100,8 +108,10 @@ class Edit extends Component
             $home->electrical_power = $this->electrical_power;
             $home->number_of_bedrooms = $this->number_of_bedrooms;
             $home->number_of_bathrooms = $this->number_of_bathrooms;
-            $home->status = $this->status;
-            $home->desc = $this->desc;
+            $home->status      = $this->status;
+            $home->desc        = $this->desc;
+            $home->block_id    = $this->block_id ?: null;
+            $home->unit_number = $this->unit_number ?: null;
 
             // Cek apakah ada perubahan pada gambar sketch
             if ($this->sketch_image) {
@@ -202,8 +212,8 @@ class Edit extends Component
             $homes = HomeList::find($this->id);
             $homeCategory = HomeCategory::get();
             $homeImages = HomeImage::where('home_id', $homes->id)->get();
-    
-            return view('livewire.admin.homelist.edit', compact('homes','homeCategory', 'homeImages'));
+
+            return view('livewire.admin.homelist.edit', compact('homes', 'homeCategory', 'homeImages'));
         }else{
             abort(404);
         }

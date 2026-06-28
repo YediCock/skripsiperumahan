@@ -50,8 +50,26 @@
                         </div>
                         <div class="col-sm-4">
                             <label>Harga</label>
-                            <input wire:model="price" type="number" class="form-control" id="post-title" placeholder="harga">
-                            @error('price') <span class="error text-danger ">{{ $message }}</span> @enderror 
+                            <input wire:model="price" type="number" class="form-control" placeholder="harga">
+                            @error('price') <span class="error text-danger ">{{ $message }}</span> @enderror
+                        </div>
+                    </div>
+                    <div class="row mb-4">
+                        <div class="col-sm-6">
+                            <label>Blok <span class="text-muted">(opsional)</span></label>
+                            <select wire:model="block_id" class="form-select">
+                                <option value="">-- Pilih Blok --</option>
+                                @foreach ($availableBlocks as $blok)
+                                    <option value="{{ $blok->id }}" {{ $blok->id == $homes->block_id ? 'selected' : '' }}>{{ $blok->name }}</option>
+                                @endforeach
+                            </select>
+                            <small class="text-muted">Ubah kategori untuk memuat ulang blok</small>
+                            @error('block_id') <span class="error text-danger">{{ $message }}</span> @enderror
+                        </div>
+                        <div class="col-sm-6">
+                            <label>Nomor Unit <span class="text-muted">(opsional)</span></label>
+                            <input wire:model="unit_number" type="text" class="form-control" placeholder="contoh: A1, B2, C3">
+                            @error('unit_number') <span class="error text-danger">{{ $message }}</span> @enderror
                         </div>
                     </div>
                     <div class="row mb-4">

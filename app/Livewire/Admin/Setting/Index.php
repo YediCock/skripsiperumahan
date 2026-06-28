@@ -22,6 +22,7 @@ class Index extends Component
     {
         $setting = Setting::all();
         $imgSlider = Slider::all();
+        // dd($imgSlider[0]);
         return view('livewire.admin.setting.index', compact('setting','imgSlider'));
     }
     

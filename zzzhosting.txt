@@ -1,0 +1,6 @@
+url : faniindrasaputra.my.id
+cpanel : http://sanremo.sg.rapidplex.com/cpanel
+
+ssh faniindr@172.236.149.91 -p 64000
+usr:faniindr
+pass:e!z[pD1XO7b9C8

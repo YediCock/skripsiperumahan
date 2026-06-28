@@ -2,7 +2,6 @@
 
 namespace App\Livewire\User\Home;
 
-use App\Models\Slider;
 use App\Models\Setting;
 use Livewire\Component;
 use App\Models\HomeList;
@@ -12,9 +11,8 @@ class Home extends Component
 {
     public function render()
     {
-        // $sliders = Slider::latest()->get();
-        // $settings = Setting::get();
-        $categories = HomeCategory::take(5)->get();
+        $setting = Setting::first();
+        $categories = HomeCategory::take(8)->get();
 
         // home list sewa
         // $latestHomeListSewa = HomeList::whereHas('homeCategory', function ($query) {
@@ -49,6 +47,6 @@ class Home extends Component
         // home harga dibawah 200 juta
         // $homeHarga = HomeList::where('price', '<=', 200)->latest()->take(4)->get();
         
-        return view('livewire.user.home.home', compact('categories','CategorySelainSewa'));
+        return view('livewire.user.home.home', compact('categories', 'CategorySelainSewa', 'setting'));
     }
 }

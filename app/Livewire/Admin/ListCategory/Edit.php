@@ -17,59 +17,71 @@ class Edit extends Component
     use LivewireAlert;
     use WithFileUploads;
     #[Layout('components.layouts.admin')]
-    public $name, $image;
+    public $name, $image, $address, $brochure_image, $site_plan_image;
     public $id;
     public $category;
     public function mount($id)
     {
-        // Ambil data rumah dari database berdasarkan ID
         $this->category = HomeCategory::find($id);
 
-        // Set nilai properti berdasarkan data rumah yang ditemukan
         if ($this->category) {
-            $this->name = $this->category->name;
+            $this->name    = $this->category->name;
+            $this->address = $this->category->address;
         }
     }
     public function save($ctgId)
     {
         $validatedData = $this->validate([
-            'name' => 'required|unique:home_categories,name,'.$ctgId,
-            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'name'            => 'required|unique:home_categories,name,'.$ctgId,
+            'address'         => 'nullable|string|max:255',
+            'image'           => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'brochure_image'  => 'nullable|image|mimes:jpeg,png,jpg,webp|max:5120',
+            'site_plan_image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:5120',
         ]);
 
         if ($validatedData) {
             $homeCategory = HomeCategory::find($ctgId);
             if (!$homeCategory) {
-                // Handle jika rumah tidak ditemukan
                 return;
             }
 
-            // Update data rumah
-            $homeCategory->name = $this->name;
-            $homeCategory->slug = Str::slug($this->name);
+            $homeCategory->name    = $this->name;
+            $homeCategory->slug    = Str::slug($this->name);
+            $homeCategory->address = $this->address;
 
-            // Jika ada gambar baru diunggah, hapus gambar lama dan simpan gambar baru
             if ($this->image) {
-                // Hapus gambar lama dari penyimpanan jika ada
                 if ($homeCategory->image) {
                     Storage::disk('public')->delete('images/categories/'.$homeCategory->image);
                 }
-                // Simpan gambar baru
                 $random = Str::random(20);
                 $imgIdentity = $random . '.webp';
-                $relativePath  = 'images/categories/' . $imgIdentity;
-                $storagePath = storage_path('app/public/' . $relativePath);
-                // Konversi gambar ke WebP
-                $image = ImageManager::imagick()
-                    ->read($this->image->path())
-                    ->resize(136, 136)
-                    ->toWebp(90);
-                file_put_contents($storagePath, $image);
-
+                $img = ImageManager::imagick()->read($this->image->path())->resize(136, 136)->toWebp(90);
+                file_put_contents(storage_path('app/public/images/categories/' . $imgIdentity), $img);
                 $homeCategory->image = $imgIdentity;
             }
 
-            // simpan
+            if ($this->brochure_image) {
+                if ($homeCategory->brochure_image) {
+                    Storage::disk('public')->delete('images/categories/'.$homeCategory->brochure_image);
+                }
+                $random = Str::random(20);
+                $brochurePath = $random . '.webp';
+                $img = ImageManager::imagick()->read($this->brochure_image->path())->toWebp(90);
+                file_put_contents(storage_path('app/public/images/categories/' . $brochurePath), $img);
+                $homeCategory->brochure_image = $brochurePath;
+            }
+
+            if ($this->site_plan_image) {
+                if ($homeCategory->site_plan_image) {
+                    Storage::disk('public')->delete('images/categories/'.$homeCategory->site_plan_image);
+                }
+                $random = Str::random(20);
+                $sitePlanPath = $random . '.webp';
+                $img = ImageManager::imagick()->read($this->site_plan_image->path())->toWebp(90);
+                file_put_contents(storage_path('app/public/images/categories/' . $sitePlanPath), $img);
+                $homeCategory->site_plan_image = $sitePlanPath;
+            }
+
             $homeCategory->save();
         }
 

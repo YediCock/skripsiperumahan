@@ -3,6 +3,7 @@
 namespace App\Livewire\Admin\ListBooking;
 
 use App\Models\Booking;
+use App\Services\FonnteService;
 use Livewire\Component;
 use Livewire\Attributes\Layout;
 use Livewire\WithPagination;
@@ -21,6 +22,42 @@ class Index extends Component
         // dd($bookings);
         return view('livewire.admin.list-booking.index', compact('bookings'));
     }
+    public function kirimPesan($id)
+    {
+        $booking = Booking::with(['customer', 'homeList'])->findOrFail($id);
+
+        if (!$booking->customer || !$booking->customer->phone) {
+            $this->alert('error', 'Nomor HP customer tidak tersedia');
+            return;
+        }
+
+        $translatedStatus = match ($booking->status) {
+            'pending' => 'Menunggu Konfirmasi',
+            'process' => 'Dalam Proses',
+            'accept'  => 'Diterima',
+            default   => $booking->status,
+        };
+
+        $format_price = (float) $booking->homeList->getAttributes()['price'];
+        $message = "Yth. Bapak/Ibu " . $booking->customer->name . ",
+
+Status pemesanan properti Anda (" . $booking->homeList->name . ") saat ini adalah *" . $translatedStatus . "*.
+
+Detail Pemesanan:
+- Properti: " . $booking->homeList->name . "
+- Harga: Rp " . number_format($format_price, 0, ',', '.') . "
+- Status: *" . $translatedStatus . "*
+
+Terima kasih atas kepercayaan Anda.
+
+Hormat kami,
+Admin";
+
+        (new FonnteService())->sendMessage($booking->customer->phone, $message);
+
+        $this->alert('success', 'Pesan berhasil dikirim ke ' . $booking->customer->name);
+    }
+
     public function deleteBooking($id)
     {
         $booking = Booking::findOrFail($id);

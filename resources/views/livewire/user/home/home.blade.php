@@ -1,7 +1,7 @@
 <div class="">
 <!-- Hero section start -->
 <section class="w-full overflow-hidden px-3 pb-6 md:pb-8 lg:pb-12 xl:pb-16 2xl:px-0"
-    style="background-image: url('http://127.0.0.1:8000/storage/images/sliders/tAaYtMsvP6vM3aNeKFwv.webp'); background-size: cover; ">
+    style="background-image: url('https://faniindrasaputra.my.id/storage/images/sliders/tAaYtMsvP6vM3aNeKFwv.webp'); background-size: cover; ">
     <div class="relative w-full">
         <div
             class="container flex flex-1 flex-col items-center justify-center gap-y-3 py-16 md:items-start md:gap-y-4 md:py-28 lg:gap-y-6 lg:py-36 xl:gap-y-8 xl:py-40 2xl:py-52">
@@ -19,49 +19,103 @@
             Sekarang</a>
         </div>
     </div>
-
 </section>
 <!-- Hero section end -->
+
+<!-- Banner Promosi section start -->
+@if($setting && $setting->image_promotion)
+<section class="w-full px-3 py-6 md:py-8 xl:px-0">
+    <div class="container">
+        <img src="{{ asset('storage/images/settings/' . $setting->image_promotion) }}"
+            alt="Promosi Perumahan"
+            class="w-full rounded-2xl object-cover shadow-md max-h-[400px]" />
+    </div>
+</section>
+@endif
+<!-- Banner Promosi section end -->
 
 <!-- Best place section start -->
 <section class="section-padding bg-white px-3 xl:px-0">
     <div class="container flex flex-col items-center justify-center">
         <h2 data-aos="zoom-in-up" class="heading-2">
-            Cari tempat ternyaman di sini
+            Pilih Perumahan Anda
         </h2>
         <p data-aos="zoom-in-up" data-aos-delay="150"
             class="heading-tagline mb-6 mt-3.5 md:mb-8 lg:mb-10 lg:mt-5 xl:mb-12">
-            Apakah Anda sedang mencari tempat tinggal ?
-            <br />
-            Kami siap membantu Anda
-            dengan informasi yang Anda butuhkan untuk check-in dan memudahkan Anda sebelumnya.
+            Temukan perumahan terbaik sesuai kebutuhan Anda.<br />
+            Klik untuk melihat detail, blok, dan unit yang tersedia.
         </p>
 
-        <div class="grid w-full grid-cols-2 md:grid-cols-3 lg:grid-cols-4 lg:divide-x-2 lg:divide-y-2">
+        <div class="grid w-full grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 divide-y divide-gray-100 lg:divide-x-2 lg:divide-y-2">
             @forelse ($categories as $category)
                 <div data-aos-delay="100" data-aos="fade-in" data-aos-easing="ease-in-out" class="best-place-card group !border-t-0">
-                    <a href="{{ url('search/'.$category->slug) }}">{{ $category->name }}</a>
-                    <p class="chip">
-                        <i class="fa-solid fa-location-crosshairs"></i>
+                    <a href="{{ route('kategoriDetail', $category->slug) }}" class="font-semibold hover:text-primary">{{ $category->name }}</a>
+                    @if($category->address)
+                    <p class="chip mt-1">
+                        <i class="fa-solid fa-location-dot"></i>
+                        <span class="truncate max-w-[160px]">{{ $category->address }}</span>
+                    </p>
+                    @endif
+                    <p class="chip mt-1">
+                        <i class="fa-solid fa-house"></i>
                         <span>{{ $category->homeList->count() }} Unit</span>
                     </p>
                 </div>
             @empty
-                No category found!
+                <p class="col-span-4 text-center text-gray-500">Belum ada kategori.</p>
             @endforelse
         </div>
     </div>
 </section>
 <!-- Best place section end -->
 
+<!-- Mengapa Pilih Kami section start -->
+<section class="section-padding bg-primary-10 px-3 xl:px-0">
+    <div class="container flex flex-col items-center justify-center">
+        <h2 data-aos="zoom-in-up" class="heading-2">Mengapa Pilih Kami?</h2>
+        <p data-aos="zoom-in-up" data-aos-delay="100" class="heading-tagline mb-10 mt-3">
+            Kami hadir untuk memberikan hunian terbaik dengan proses mudah dan terpercaya.
+        </p>
+        <div class="grid w-full gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            <div data-aos="fade-up" data-aos-delay="0" class="flex flex-col items-center rounded-2xl bg-white p-6 text-center shadow-sm">
+                <div class="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-primary text-white text-2xl">
+                    <i class="fa-solid fa-shield-halved"></i>
+                </div>
+                <h5 class="mb-2 text-lg font-bold text-gray-800">Terpercaya & Legal</h5>
+                <p class="text-sm text-gray-500">Semua properti telah memiliki sertifikat resmi dan legalitas yang terjamin.</p>
+            </div>
+            <div data-aos="fade-up" data-aos-delay="100" class="flex flex-col items-center rounded-2xl bg-white p-6 text-center shadow-sm">
+                <div class="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-primary text-white text-2xl">
+                    <i class="fa-solid fa-money-bill-wave"></i>
+                </div>
+                <h5 class="mb-2 text-lg font-bold text-gray-800">Harga Terjangkau</h5>
+                <p class="text-sm text-gray-500">Dapatkan hunian berkualitas dengan harga yang kompetitif dan cicilan ringan.</p>
+            </div>
+            <div data-aos="fade-up" data-aos-delay="200" class="flex flex-col items-center rounded-2xl bg-white p-6 text-center shadow-sm">
+                <div class="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-primary text-white text-2xl">
+                    <i class="fa-solid fa-location-dot"></i>
+                </div>
+                <h5 class="mb-2 text-lg font-bold text-gray-800">Lokasi Strategis</h5>
+                <p class="text-sm text-gray-500">Dekat dengan fasilitas umum, sekolah, pasar, dan akses jalan utama.</p>
+            </div>
+            <div data-aos="fade-up" data-aos-delay="300" class="flex flex-col items-center rounded-2xl bg-white p-6 text-center shadow-sm">
+                <div class="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-primary text-white text-2xl">
+                    <i class="fa-solid fa-headset"></i>
+                </div>
+                <h5 class="mb-2 text-lg font-bold text-gray-800">Layanan Terbaik</h5>
+                <p class="text-sm text-gray-500">Tim kami siap membantu Anda 7 hari seminggu dari proses awal hingga serah terima kunci.</p>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Mengapa Pilih Kami section end -->
+
 <!-- How it works section start -->
 <section class="section-padding overflow-hidden">
     <div class="container flex flex-col items-center justify-center">
-        <h2 data-aos="zoom-in-up" class="heading-2 mb-5">Cara kerjanya</h2>
+        <h2 data-aos="zoom-in-up" class="heading-2 mb-5">Cara Kerjanya</h2>
         <p data-aos="zoom-in-up" data-aos-delay="150" class="heading-tagline">
-            Exponent adalah tema yang sempurna hingga ke piksel, dirancang khusus untuk startup
-            dan bisnis.
-            <br />Bangun situs web Anda dengan cepat dan mudah.
+            Proses mudah dan cepat untuk mendapatkan properti impian Anda.
         </p>
         <div class="mt-14 flex w-full flex-col items-center gap-0 gap-y-5 px-3 md:flex-row md:gap-y-0 2xl:px-0">
             <!-- card 1 -->
@@ -81,13 +135,9 @@
                         fill="currentColor" />
                 </svg>
             </div>
-
             <div class="content">
                 <h4>Temukan Properti</h4>
-                <p>
-                    Mulai dengan cepat dan mudah dengan
-                    pilihan Anda dengan satu klik.
-                </p>
+                <p>Pilih perumahan yang sesuai dengan kebutuhan dan anggaran Anda.</p>
             </div>
             </div>
             <!-- line -->
@@ -109,13 +159,9 @@
                         fill="currentColor" />
                 </svg>
             </div>
-
             <div class="content">
-                <h4>Pilih Properti</h4>
-                <p>
-                    Mulai dengan cepat dan mudah dengan
-                    pilihan Anda dengan satu klik.
-                </p>
+                <h4>Pilih Unit</h4>
+                <p>Pilih blok dan nomor unit yang Anda inginkan dari ketersediaan yang ada.</p>
             </div>
             </div>
             <!-- line -->
@@ -137,13 +183,9 @@
                         fill="currentColor" />
                 </svg>
             </div>
-
             <div class="content">
-                <h4>Temukan Impian Kamu</h4>
-                <p>
-                    Mulai dengan cepat dan mudah dengan
-                    pilihan Anda dengan satu klik.
-                </p>
+                <h4>Booking & Miliki</h4>
+                <p>Lakukan booking online dan kami akan menghubungi Anda untuk proses selanjutnya.</p>
             </div>
             </div>
         </div>
@@ -167,45 +209,41 @@
             @foreach ($CategorySelainSewa as $homeList)
                 <div data-aos="fade-up" data-aos-anchor-placement="top-bottom" class="rounded-[20px] bg-new-100 transition-all duration-300 ease-in-out hover:shadow-shadow7">
                     <div class="group relative h-auto w-full overflow-hidden rounded-t-[20px]">
-                        <div
-                            class="absolute right-0 top-0 z-10 rounded-tr-[20px] bg-primary px-3.5 py-1.5 font-semibold text-white uppercase">
+                        <div class="absolute right-0 top-0 z-10 rounded-tr-[20px] bg-primary px-3.5 py-1.5 font-semibold text-white uppercase">
                             {{ $homeList->status }}
                         </div>
-                        <img src="{{ asset('storage/images/detailHomeImages/' . $homeList->homeImage[0]->image) }}"
+                        @if($homeList->block && $homeList->unit_number)
+                        <div class="absolute left-0 top-0 z-10 rounded-tl-[20px] bg-secondary px-3 py-1 text-xs font-semibold text-white">
+                            {{ $homeList->block->name }} - {{ $homeList->unit_number }}
+                        </div>
+                        @endif
+                        <img src="{{ $homeList->homeImage->count() ? asset('storage/images/detailHomeImages/' . $homeList->homeImage->first()->image) : asset('blank.png') }}"
                             class="h-full max-h-[250px] w-full object-cover transition-all duration-700 ease-in-out group-hover:scale-[1.15]" />
                     </div>
-                    <div class="p-8">
+                    <div class="p-6">
                         <p class="text-2xl font-medium text-new-900">
                             {{ $homeList->getPriceAttribute() }}<span class="font-poppins text-sm font-medium text-new-800">
-                                @if ($homeList->homeCategory->slug == 'sewa')
-                                    Juta / bulan
-                                @else
-                                    Juta
-                                @endif
+                                @if ($homeList->homeCategory->slug == 'sewa') Juta / bulan @else Juta @endif
                             </span>
                         </p>
-                        <h4 class="mb-5 mt-3 text-2xl font-medium leading-8 text-new-900">
-                            {{ $homeList->name }}
-                        </h4>
-                        <div class="mb-7 flex items-center gap-x-[10px]">
-                            <i class="fa-solid fa-map-pin text-secondary"></i>
-                            <p class="font-poppins text-sm font-medium text-new-800">
-                                Lt {{ $homeList->land_area }} Lb {{ $homeList->building_area }}
-                            </p>
+                        <h4 class="mb-3 mt-2 text-xl font-medium leading-7 text-new-900">{{ $homeList->name }}</h4>
+                        <p class="mb-3 text-xs text-gray-500 font-medium">{{ $homeList->homeCategory->name }}
+                            @if($homeList->homeCategory->address)
+                                &bull; {{ $homeList->homeCategory->address }}
+                            @endif
+                        </p>
+                        <div class="flex items-center gap-x-4 text-sm text-new-800 mb-4">
+                            <span><i class="fa-solid fa-bed text-primary mr-1"></i>{{ $homeList->number_of_bedrooms }} KT</span>
+                            <span><i class="fa-solid fa-bath text-primary mr-1"></i>{{ $homeList->number_of_bathrooms }} KM</span>
+                            <span><i class="fa-solid fa-expand text-primary mr-1"></i>{{ $homeList->land_area }}/{{ $homeList->building_area }} m²</span>
                         </div>
                         <hr />
-                        <div class="mt-6 grid grid-cols-2 items-center">
-                            <div class="flex items-center gap-x-[10px]">
-
-                            </div>
-
-                            <div class="flex items-center justify-end">
-                                <a href="{{ route('detailProperti', $homeList->slug) }}"
-                                class="flex items-center gap-x-1.5 transition-all duration-300 ease-in-out hover:gap-x-4 md:gap-x-2 lg:gap-x-2.5">
-                                <span class="font-poppins text-sm font-medium text-new-900">Book Now</span>
-                                <i class="fa-solid fa-arrow-right text-primary"></i>
-                                </a>
-                            </div>
+                        <div class="mt-4 flex items-center justify-end">
+                            <a href="{{ route('detailProperti', $homeList->slug) }}"
+                            class="flex items-center gap-x-1.5 transition-all duration-300 ease-in-out hover:gap-x-4">
+                            <span class="font-poppins text-sm font-medium text-new-900">Lihat Detail</span>
+                            <i class="fa-solid fa-arrow-right text-primary"></i>
+                            </a>
                         </div>
                     </div>
                 </div>
