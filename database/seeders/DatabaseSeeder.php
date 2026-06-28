@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
             CustomerSeeder::class,
             BookingSeeder::class,
             SliderSeeder::class,
+            FaqSeeder::class,
         ]);
 
         if (!Setting::exists()) {
