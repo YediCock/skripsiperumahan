@@ -1,34 +1,22 @@
 <div class="">
 <!-- Hero section start -->
-<section class="w-full overflow-hidden px-3 pb-6 md:pb-8 lg:pb-12 xl:pb-16 2xl:px-0"
-    style="background-image: url('https://faniindrasaputra.my.id/storage/images/sliders/tAaYtMsvP6vM3aNeKFwv.webp'); background-size: cover; ">
-    <div class="relative w-full">
-        <div
-            class="container flex flex-1 flex-col items-center justify-center gap-y-3 py-16 md:items-start md:gap-y-4 md:py-28 lg:gap-y-6 lg:py-36 xl:gap-y-8 xl:py-40 2xl:py-52">
-            <h1 data-aos="fade-right" style="color: white;" class="heading-hero w-fit text-center md:text-start">
-            Temukan
-            <br />
-            properti yang tepat
-            </h1>
-            <p style="color: white;" data-aos="fade-right" data-aos-delay="150"
-            class="w-fit text-center font-poppins text-base font-normal text-nature-300 md:text-start lg:text-lg xl:text-xl 2xl:text-2xl">
-            Temukan dan pesan pengalaman yang luar biasa.
-            </p>
-            <a data-aos="fade-right" data-aos-delay="300" href="{{ route('search') }}"
-            class="w-fit rounded-full bg-primary px-3 py-2.5 text-center text-white md:py-3 lg:px-5 lg:py-4 lg:text-xl lg:font-bold xl:mt-2 xl:px-7 xl:py-5">Dapatkan
-            Sekarang</a>
-        </div>
+<div class="w-full overflow-hidden px-3 pb-6 md:pb-8 lg:pb-12 xl:pb-16 2xl:px-0">
+    <section class="w-full">
+        <img 
+            src="https://faniindrasaputra.my.id/storage/images/sliders/IYkeSLGcYRnvJ5eSC58i.webp" 
+            alt="Hero Image" 
+            class="w-full h-auto object-cover"
+        />
+    </section>
     </div>
-</section>
 <!-- Hero section end -->
 
 <!-- Banner Promosi section start -->
 @if($setting && $setting->image_promotion)
 <section class="w-full px-3 py-6 md:py-8 xl:px-0">
-    <div class="container">
-        <img src="{{ asset('storage/images/settings/' . $setting->image_promotion) }}"
+    <div class="container mx-auto"> <img src="{{ asset('storage/images/settings/' . $setting->image_promotion) }}"
             alt="Promosi Perumahan"
-            class="w-full rounded-2xl object-cover shadow-md max-h-[400px]" />
+            class="w-full h-auto rounded-2xl shadow-md" />
     </div>
 </section>
 @endif
