@@ -33,7 +33,9 @@ class Search extends Component
         if ($this->slug) {
             $category = HomeCategory::where('slug', $this->slug)->first();
             $this->availableBlocks = $category
-                ? Block::where('home_category_id', $category->id)->get()->toArray()
+                ? Block::where('home_category_id', $category->id)
+                    ->withCount(['homeList as unit_count' => fn($q) => $q->where('category_id', $category->id)])
+                    ->get()->toArray()
                 : [];
         } else {
             $this->availableBlocks = [];

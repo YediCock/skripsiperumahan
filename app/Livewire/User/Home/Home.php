@@ -2,6 +2,7 @@
 
 namespace App\Livewire\User\Home;
 
+use App\Models\Block;
 use App\Models\Setting;
 use Livewire\Component;
 use App\Models\HomeList;
@@ -39,6 +40,20 @@ class Home extends Component
         // Mengambil 8 produk pertama dari koleksi yang sudah diacak
         $CategorySelainSewa = $homeLists->take(9);
 
+        // blok per kategori dengan jumlah unit
+        $blocksByCategory = [];
+        foreach ($homeCategories as $category) {
+            $blocks = Block::where('home_category_id', $category->id)
+                ->withCount(['homeList as unit_count' => fn($q) => $q->where('category_id', $category->id)])
+                ->get();
+            if ($blocks->isNotEmpty()) {
+                $blocksByCategory[$category->id] = [
+                    'category' => $category,
+                    'blocks'   => $blocks,
+                ];
+            }
+        }
+
         // ruko
         // $rukoHomes = HomeList::whereHas('homeCategory', function ($query) {
         //     $query->where('slug', 'ruko');
@@ -47,6 +62,6 @@ class Home extends Component
         // home harga dibawah 200 juta
         // $homeHarga = HomeList::where('price', '<=', 200)->latest()->take(4)->get();
         
-        return view('livewire.user.home.home', compact('categories', 'CategorySelainSewa', 'setting'));
+        return view('livewire.user.home.home', compact('categories', 'CategorySelainSewa', 'setting', 'blocksByCategory'));
     }
 }

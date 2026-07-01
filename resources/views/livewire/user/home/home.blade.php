@@ -237,6 +237,60 @@
                 </div>
             @endforeach
         </div>
+
+        {{-- Ringkasan Blok per Perumahan --}}
+        @if(!empty($blocksByCategory))
+        <div class="mt-14 w-full" data-aos="fade-up">
+            <h3 class="mb-2 text-center text-xl font-bold text-gray-800">Ketersediaan Unit per Blok</h3>
+            <p class="mb-8 text-center text-sm text-gray-500">Lihat distribusi unit di setiap blok perumahan</p>
+
+            <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                @foreach($blocksByCategory as $item)
+                <div class="rounded-2xl border border-gray-100 bg-gray-50 p-5 shadow-sm" data-aos="fade-up">
+                    <div class="mb-4 flex items-center justify-between">
+                        <div>
+                            <h4 class="font-bold text-gray-800">{{ $item['category']->name }}</h4>
+                            @if($item['category']->address)
+                            <p class="mt-0.5 text-xs text-gray-400"><i class="fa-solid fa-location-dot mr-1 text-primary"></i>{{ $item['category']->address }}</p>
+                            @endif
+                        </div>
+                        <a href="{{ route('kategoriDetail', $item['category']->slug) }}"
+                            class="text-xs font-semibold text-primary hover:underline whitespace-nowrap">
+                            Lihat Detail →
+                        </a>
+                    </div>
+
+                    <div class="space-y-2">
+                        @foreach($item['blocks'] as $block)
+                        <div class="flex items-center justify-between rounded-xl bg-white px-4 py-2.5 shadow-xs border border-gray-100">
+                            <div class="flex items-center gap-2">
+                                <span class="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary">
+                                    {{ strtoupper(substr($block->name, -1)) }}
+                                </span>
+                                <span class="text-sm font-semibold text-gray-700">{{ $block->name }}</span>
+                            </div>
+                            <div class="flex items-center gap-1.5">
+                                <span class="rounded-full bg-primary px-2.5 py-0.5 text-xs font-bold text-white">
+                                    {{ $block->unit_count }}
+                                </span>
+                                <span class="text-xs text-gray-400">unit</span>
+                            </div>
+                        </div>
+                        @endforeach
+                    </div>
+
+                    <div class="mt-3 border-t border-gray-100 pt-3 flex items-center justify-between">
+                        <span class="text-xs text-gray-400">Total</span>
+                        <span class="text-sm font-bold text-gray-700">
+                            {{ $item['blocks']->sum('unit_count') }} unit tersedia
+                        </span>
+                    </div>
+                </div>
+                @endforeach
+            </div>
+        </div>
+        @endif
+
     </div>
 </section>
 <!-- Feature Destination section end -->

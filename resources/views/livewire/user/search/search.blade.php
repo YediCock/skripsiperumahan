@@ -63,17 +63,42 @@
                 class="block w-full rounded-lg border-0 bg-white p-2.5 text-sm text-gray-900 !shadow-none focus:border-0 focus:ring-0">
                 <option value="">Semua Blok</option>
                 @foreach($availableBlocks as $blok)
-                    <option value="{{ $blok['id'] }}">{{ $blok['name'] }}</option>
+                    <option value="{{ $blok['id'] }}">{{ $blok['name'] }} ({{ $blok['unit_count'] }} unit)</option>
                 @endforeach
             </select>
         </div>
         @endif
-    
-        <div wire:ignore class="flex w-full items-center rounded-full border border-new-200 px-4 sm:w-1/2 md:w-1/4 lg:flex-1">
-            <i class="fa-solid fa-magnifying-glass text-[#777777]"></i>
-            <input wire:model.live.debounce.300ms="search" class="block w-full rounded-lg border-0 bg-white p-2.5 text-sm text-gray-900 !shadow-none focus:border-0 focus:ring-0"
-                placeholder="Cari Properti.." />
-        </div>
+    </div>
+
+    {{-- Ringkasan blok --}}
+    @if(count($availableBlocks) > 0)
+    <div class="mt-3 flex flex-wrap gap-2 px-1">
+        @foreach($availableBlocks as $blok)
+        <button wire:click="$set('filterBlock', '{{ $filterBlock == $blok['id'] ? '' : $blok['id'] }}')"
+            class="flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-semibold transition
+                {{ $filterBlock == $blok['id']
+                    ? 'bg-primary text-white border-primary'
+                    : 'bg-white text-gray-600 border-gray-200 hover:border-primary hover:text-primary' }}">
+            <i class="fa-solid fa-layer-group text-[10px]"></i>
+            {{ $blok['name'] }}
+            <span class="rounded-full {{ $filterBlock == $blok['id'] ? 'bg-white/20' : 'bg-gray-100' }} px-1.5 py-0.5">
+                {{ $blok['unit_count'] }}
+            </span>
+        </button>
+        @endforeach
+        @if($filterBlock)
+        <button wire:click="$set('filterBlock', '')"
+            class="flex items-center gap-1 rounded-full border border-gray-200 bg-gray-50 px-3 py-1 text-xs text-gray-500 hover:bg-gray-100 transition">
+            <i class="fa-solid fa-xmark"></i> Reset
+        </button>
+        @endif
+    </div>
+    @endif
+
+    <div wire:ignore class="mt-2 flex w-full items-center rounded-full border border-new-200 px-4">
+        <i class="fa-solid fa-magnifying-glass text-[#777777]"></i>
+        <input wire:model.live.debounce.300ms="search" class="block w-full rounded-lg border-0 bg-white p-2.5 text-sm text-gray-900 !shadow-none focus:border-0 focus:ring-0"
+            placeholder="Cari Properti.." />
     </div>
     
     <div class="gap-30 section-padding-t grid w-full sm:grid-cols-2 md:grid-cols-3">
