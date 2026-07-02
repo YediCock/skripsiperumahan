@@ -117,10 +117,10 @@
                                     
                                     @if($x_coordinate && $y_coordinate)
                                         <div class="position-absolute bg-danger rounded-circle shadow"
-                                             style="width: 18px; height: 18px; 
+                                            style="width: 10px; height: 10px; 
                                                     left: {{ $x_coordinate }}%; top: {{ $y_coordinate }}%; 
                                                     transform: translate(-50%, -50%); 
-                                                    border: 2.5px solid white; pointer-events: none; z-index: 5;">
+                                                    border: 1.5px solid white; pointer-events: none; z-index: 5;">
                                         </div>
                                     @endif
                                 </div>

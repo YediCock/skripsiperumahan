@@ -12,7 +12,7 @@
 <div class="absolute group cursor-pointer z-10 transition-transform duration-200 hover:scale-125"
      style="left: {{ $unit->x_coordinate }}%; top: {{ $unit->y_coordinate }}%; transform: translate(-50%, -50%);">
     
-    <div class="w-2.5 h-2.5 sm:w-3 sm:h-3 md:w-4 md:h-4 rounded-full shadow-sm border border-white {{ $colorClass }}"></div>
+    <div class="w-1.5 h-1.5 sm:w-2 sm:h-2 md:w-2.5 md:h-2.5 rounded-full shadow-sm border border-white {{ $colorClass }}"></div>
     
     <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-max max-w-[150px] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50 pointer-events-none">
         <div class="bg-gray-900 text-white text-xs rounded-lg py-1.5 px-3 text-center shadow-xl">
