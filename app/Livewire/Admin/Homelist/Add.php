@@ -20,12 +20,18 @@ class Add extends Component
     public $name, $category, $block_id, $unit_number, $price, $building_area, $land_area, $electrical_power, $number_of_bedrooms, $number_of_bathrooms, $status, $desc="";
     public $homeImage, $sketch_image, $floorplan;
     public $availableBlocks = [];
+
+    // BARU: Tambahkan property ini
+    public $x_coordinate, $y_coordinate;
+    public $selectedCategoryData;
+
     #[Layout('components.layouts.admin')]
 
     public function updatedCategory($value)
     {
         $this->availableBlocks = Block::where('home_category_id', $value)->get();
         $this->block_id = null;
+        $this->selectedCategoryData = HomeCategory::find($value);
     }
 
     public function save()
@@ -47,6 +53,8 @@ class Add extends Component
             'floorplan' => 'required|image|mimes:jpeg,png,jpg,webp|max:2048',
             'block_id' => 'nullable|exists:blocks,id',
             'unit_number' => 'nullable|string|max:20',
+            'x_coordinate' => 'nullable|numeric',
+            'y_coordinate' => 'nullable|numeric',
         ]);
 
         if ($validatedData) {
@@ -89,6 +97,8 @@ class Add extends Component
                 'desc' => $this->desc,
                 'sketch_image' => $sketchPath,
                 'floorplan' => $floorplanPath,
+                'x_coordinate' => $this->x_coordinate,
+                'y_coordinate' => $this->y_coordinate,
             ]);
 
             foreach ($this->homeImage as $image) {

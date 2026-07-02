@@ -11,12 +11,15 @@ use Jantinnerezo\LivewireAlert\LivewireAlert;
 class Edit extends Component
 {
     use LivewireAlert;
+    
     #[Layout('components.layouts.admin')]
     public $status;
     public $id;
     public $booking;
+
     public function mount($id)
     {
+        $this->id = $id; // Simpan ID agar bisa dipanggil di render
         // Ambil data rumah dari database berdasarkan ID
         $this->booking = Booking::find($id);
 
@@ -25,6 +28,7 @@ class Edit extends Component
             $this->status = $this->booking->status;
         }
     }
+
     public function save($bookingId)
     {
         $validatedData = $this->validate([
@@ -32,18 +36,35 @@ class Edit extends Component
         ]);
 
         if ($validatedData) {
-            $booking = Booking::find($bookingId);
+            // Panggil booking beserta relasinya agar tidak terjadi error saat load data
+            $booking = Booking::with(['homeList.homeCategory', 'customer'])->find($bookingId);
+            
             if (!$booking) {
-                // Handle jika rumah tidak ditemukan
+                // Handle jika pesanan tidak ditemukan
                 return;
             }
 
-            // Update data booking
+            // 1. Update data status booking
             $booking->status = $this->status;
-
             $booking->save();
 
-            // send wa
+            // 2. SINKRONISASI STATUS PROPERTI (Logika Baru)
+            if ($booking->homeList) {
+                $homeList = $booking->homeList;
+                $isSewa = ($homeList->homeCategory && $homeList->homeCategory->slug == 'sewa');
+
+                if ($this->status === 'accept') {
+                    // Jika di-ACC, ubah jadi Terjual / Tersewa
+                    $homeList->status = $isSewa ? 'tersewa' : 'terjual';
+                } else {
+                    // Jika dikembalikan ke Pending/Process, kembalikan ke Dijual / Sewa
+                    $homeList->status = $isSewa ? 'sewa' : 'dijual';
+                }
+                
+                $homeList->save();
+            }
+
+            // 3. send wa
             $customerPhone = $booking->customer->phone;
             
             $translatedStatus = match ($this->status) {
@@ -66,15 +87,16 @@ Detail Pemesanan:
 Terima kasih atas kepercayaan Anda.
 
 Hormat kami,
-Admin Griya Sedaya Utama"; // Assuming a generic Admin Properti name
+Admin Griya Sedaya Utama";
             
             $fonnteService = new FonnteService();
             $fonnteService->sendMessage($customerPhone, $message);
         }
 
-        $this->flash('success', 'Data berhasil diperbarui');
+        $this->flash('success', 'Data pemesanan dan properti berhasil diperbarui');
         return $this->redirect('/admin/list-booking', navigate: true);
     }
+
     public function render()
     {
         if ($this->booking) {

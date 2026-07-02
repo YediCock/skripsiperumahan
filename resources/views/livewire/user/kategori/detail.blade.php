@@ -1,5 +1,4 @@
 <div>
-    <!-- Header -->
     <section class="bg-primary-10">
         <div class="h-auto w-full bg-cover bg-center bg-no-repeat"
             style="background-image: url('/frontendNew/assets/images/layer.svg')">
@@ -31,11 +30,11 @@
 
     <div class="container px-4 py-10 xl:px-0">
 
-        <!-- Brosur & Site Plan -->
         @if($category->brochure_image || $category->site_plan_image)
         <section class="mb-12">
             <h2 class="heading-2 mb-6 text-center">Informasi Perumahan</h2>
             <div class="grid gap-6 {{ $category->brochure_image && $category->site_plan_image ? 'md:grid-cols-2' : 'md:grid-cols-1' }}">
+                
                 @if($category->brochure_image)
                 <div class="rounded-2xl border bg-white p-4 shadow-sm">
                     <h4 class="mb-3 text-lg font-semibold text-gray-700">Brosur Perumahan</h4>
@@ -47,22 +46,61 @@
                     <p class="mt-2 text-xs text-gray-400 text-center">Klik gambar untuk memperbesar</p>
                 </div>
                 @endif
+
                 @if($category->site_plan_image)
                 <div class="rounded-2xl border bg-white p-4 shadow-sm">
-                    <h4 class="mb-3 text-lg font-semibold text-gray-700">Site Plan / Denah Kawasan</h4>
-                    <a href="{{ asset('storage/images/categories/' . $category->site_plan_image) }}" target="_blank">
+                    <h4 class="mb-3 text-lg font-semibold text-gray-700">Site Plan / Denah Kawasan Interaktif</h4>
+                    
+                    <div class="relative w-full overflow-hidden rounded-xl bg-gray-50 border">
                         <img src="{{ asset('storage/images/categories/' . $category->site_plan_image) }}"
                             alt="Site Plan {{ $category->name }}"
-                            class="w-full rounded-xl object-contain max-h-[500px] cursor-pointer hover:opacity-90 transition" />
-                    </a>
-                    <p class="mt-2 text-xs text-gray-400 text-center">Klik gambar untuk memperbesar</p>
+                            class="w-full h-auto object-contain block select-none" />
+
+                        @if($blocks->count() > 0)
+                            @foreach($blocks as $block)
+                                @foreach($block->homeList as $unit)
+                                    @if($unit->x_coordinate && $unit->y_coordinate)
+                                        @include('livewire.user.kategori._pin_siteplan', ['unit' => $unit, 'blockName' => $block->name])
+                                    @endif
+                                @endforeach
+                            @endforeach
+                        @endif
+
+                        @if($unitsWithoutBlock->count() > 0)
+                            @foreach($unitsWithoutBlock as $unit)
+                                @if($unit->x_coordinate && $unit->y_coordinate)
+                                    @include('livewire.user.kategori._pin_siteplan', ['unit' => $unit, 'blockName' => 'Lainnya'])
+                                @endif
+                            @endforeach
+                        @endif
+                    </div>
+                    <p class="mt-2 text-xs text-gray-400 text-center">Arahkan kursor atau ketuk pada titik warna untuk detail status unit</p>
+
+                    <div class="mt-4 flex flex-wrap justify-center gap-4 text-xs text-gray-600 border-t pt-3">
+                        <div class="flex items-center gap-1.5">
+                            <span class="w-3.5 h-3.5 rounded-full bg-white border-2 border-gray-400 block shadow-sm"></span> 
+                            <span>Dijual / Tersedia</span>
+                        </div>
+                        <div class="flex items-center gap-1.5">
+                            <span class="w-3.5 h-3.5 rounded-full bg-red-600 border border-white block shadow-sm"></span> 
+                            <span>Terjual</span>
+                        </div>
+                        {{-- <div class="flex items-center gap-1.5">
+                            <span class="w-3.5 h-3.5 rounded-full bg-green-500 border border-white block shadow-sm"></span> 
+                            <span>Sewa</span>
+                        </div>
+                        <div class="flex items-center gap-1.5">
+                            <span class="w-3.5 h-3.5 rounded-full bg-blue-600 border border-white block shadow-sm"></span> 
+                            <span>Tersewa</span>
+                        </div> --}}
+                    </div>
                 </div>
                 @endif
+
             </div>
         </section>
         @endif
 
-        <!-- Unit per Blok -->
         <section>
             <h2 class="heading-2 mb-2 text-center">Unit Tersedia</h2>
             <p class="heading-tagline mb-8 text-center">Pilih unit sesuai kebutuhan Anda</p>

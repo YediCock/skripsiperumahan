@@ -74,18 +74,27 @@
                                     <td>{{ $booking->homeList->price }}</td>
                                     <td>{{ $booking->status}}</td>
                                     <td class="text-center">
-                                        <div class="action-btns">
-                                            <a wire:navigate href="{{ route('listBookingEdit', $booking->id) }}" class="me-2" data-toggle="tooltip" data-placement="top" title="Kirim Pesan">
-                                                Kirim Pesan
-                                            </a>
-                                            <a wire:navigate href="{{ route('listBookingEdit', $booking->id) }}" class="action-btn btn-edit bs-tooltip me-2" data-toggle="tooltip" data-placement="top" title="Edit">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit-2"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path></svg>
-                                            </a>
-                                            <a wire:confirm="Apakah anda yakin ingin menghapus?" wire:click="deleteBooking({{ $booking->id }})" class="action-btn btn-delete bs-tooltip" data-toggle="tooltip" data-placement="top" title="Delete">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
-                                            </a>
-                                        </div>
-                                    </td>
+    <div class="action-btns" style="display: flex; justify-content: center; align-items: center; gap: 10px;">
+        
+        @if(strtolower($booking->status) !== 'accept')
+            <a href="javascript:void(0);" wire:confirm="Yakin ingin ACC pesanan ini? Properti akan otomatis berstatus Terjual/Tersewa." wire:click="acceptBooking({{ $booking->id }})" class="action-btn text-success bs-tooltip" data-toggle="tooltip" data-placement="top" title="ACC Pesanan">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-check-circle"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+            </a>
+        @endif
+
+        <a href="javascript:void(0);" wire:click="kirimPesan({{ $booking->id }})" class="action-btn text-info bs-tooltip" data-toggle="tooltip" data-placement="top" title="Kirim Pesan WA">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-message-circle"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+        </a>
+
+        <a wire:navigate href="{{ route('listBookingEdit', $booking->id) }}" class="action-btn btn-edit bs-tooltip" data-toggle="tooltip" data-placement="top" title="Edit">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit-2"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path></svg>
+        </a>
+
+        <a wire:confirm="Apakah anda yakin ingin menghapus?" wire:click="deleteBooking({{ $booking->id }})" class="action-btn btn-delete bs-tooltip" data-toggle="tooltip" data-placement="top" title="Delete">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+        </a>
+    </div>
+</td>
                                 </tr>
                                 @empty
                                 <tr>

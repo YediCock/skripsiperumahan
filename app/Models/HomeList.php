@@ -24,7 +24,9 @@ class HomeList extends Model
         'electrical_power',
         'status',
         'floorplan',
-        'sketch_image'
+        'sketch_image',
+        'x_coordinate',
+        'y_coordinate'
     ];
     public function homeImage()
     {

@@ -121,10 +121,17 @@
                     <span><i class="fa-solid fa-expand text-primary mr-0.5"></i> {{ $home->land_area }}/{{ $home->building_area }} m²</span>
                 </div>
                 <div class="h5-description-icons">
-                    <div style="display: flex; justify-content: start; width: 100%;">
-                        <span class="uppercase">{{ $home->status }}</span>
-                    </div>
+                <div style="display: flex; justify-content: start; width: 100%;">
+                    <span class="uppercase px-2 py-1 rounded text-white text-[10px] font-bold tracking-wider 
+                        @if($home->status == 'dijual') bg-blue-600 
+                        @elseif($home->status == 'terjual') bg-red-600 
+                        @elseif($home->status == 'sewa') bg-green-600 
+                        @elseif($home->status == 'tersewa') bg-yellow-600 
+                        @else bg-gray-500 @endif">
+                        {{ $home->status }}
+                    </span>
                 </div>
+            </div>
                 <div class="h5-description-footer">
                     <span>
                         {{ $home->getPriceAttribute() }}

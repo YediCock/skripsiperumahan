@@ -1,5 +1,4 @@
 <div>
-    <!--  BEGIN BREADCRUMBS  -->
     <div class="secondary-nav">
         <div class="breadcrumbs-container" data-page-heading="Analytics">
             <header class="header navbar navbar-expand-sm">
@@ -8,29 +7,21 @@
                 </a>
                 <div class="d-flex breadcrumb-content">
                     <div class="page-header">
-
-                        <div class="page-title">
-                        </div>
-        
+                        <div class="page-title"></div>
                         <nav class="breadcrumb-style-one" aria-label="breadcrumb">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item "><a href="{{ route('homeList') }}" wire:navigate>List Rumah</a></li>
                                 <li class="breadcrumb-item active" aria-current="page">Tambah list rumah</li>
                             </ol>
                         </nav>
-        
                     </div>
                 </div>
             </header>
         </div>
     </div>
-    <!--  END BREADCRUMBS  -->
-    
     <div class=" layout-top-spacing">
         <div class="row mb-4 layout-spacing layout-top-spacing">
-
             <div class="col-xxl-12 col-xl-12 col-lg-12 col-md-12 col-sm-12">
-
                 <div class="widget-content widget-content-area blog-create-section">
                     <form wire:submit="save">
                     <div class="row mb-4">
@@ -41,7 +32,7 @@
                         </div>
                         <div class="col-sm-4">
                             <label for="category">Kategori</label>
-                            <select  wire:model="category" id="category" class="form-select">
+                            <select wire:model.live="category" id="category" class="form-select">
                                 <option selected>pilih kategori</option>
                                 @foreach ($homeCategories as $ctg)
                                     <option value="{{$ctg->id}}">{{$ctg->name}}</option>
@@ -55,6 +46,7 @@
                             @error('price') <span class="error text-danger ">{{ $message }}</span> @enderror
                         </div>
                     </div>
+                    
                     <div class="row mb-4">
                         <div class="col-sm-6">
                             <label>Blok <span class="text-muted">(opsional)</span></label>
@@ -73,6 +65,71 @@
                             @error('unit_number') <span class="error text-danger">{{ $message }}</span> @enderror
                         </div>
                     </div>
+
+                    <div wire:key="wrapper-siteplan-section">
+                        @if($selectedCategoryData && $selectedCategoryData->site_plan_image)
+                        <div class="row mb-4">
+                            <div class="col-sm-12">
+                                <label class="form-label fw-bold">
+                                    Penempatan Unit pada Site Plan
+                                    <span class="text-info d-block" style="font-size: 12px; font-weight: normal;">
+                                        *Klik pada area kapling gambar denah di bawah untuk menentukan titik lokasi unit rumah secara otomatis.
+                                    </span>
+                                </label>
+                                
+                                <div class="d-flex gap-2 mb-3 col-sm-6 ps-0">
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light">Koordinat X (%)</span>
+                                        <input wire:model="x_coordinate" type="text" class="form-control" placeholder="0.00" readonly>
+                                    </div>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light">Koordinat Y (%)</span>
+                                        <input wire:model="y_coordinate" type="text" class="form-control" placeholder="0.00" readonly>
+                                    </div>
+                                    @if($x_coordinate || $y_coordinate)
+                                    <button type="button" class="btn btn-outline-danger" wire:click="$set('x_coordinate', null); $set('y_coordinate', null)">
+                                        Reset Titik
+                                    </button>
+                                    @endif
+                                </div>
+
+                                <div x-data="{
+                                        setCoord(e) {
+                                            const img = e.currentTarget;
+                                            const rect = img.getBoundingClientRect();
+                                            const x = e.clientX - rect.left;
+                                            const y = e.clientY - rect.top;
+                                            const xPercent = ((x / rect.width) * 100).toFixed(2);
+                                            const yPercent = ((y / rect.height) * 100).toFixed(2);
+                                            
+                                            $wire.set('x_coordinate', xPercent);
+                                            $wire.set('y_coordinate', yPercent);
+                                        }
+                                     }" 
+                                     class="position-relative border rounded p-1" 
+                                     style="background-color: #f8f9fa; display: inline-block; width: 100%; max-width: 100%; overflow: hidden;">
+                                    
+                                    <img @click="setCoord($event)"
+                                         src="{{ asset('storage/images/categories/' . $selectedCategoryData->site_plan_image) }}" 
+                                         alt="Site Plan Interactive" 
+                                         class="img-fluid w-100"
+                                         style="cursor: crosshair; user-select: none; -webkit-user-drag: none;">
+                                    
+                                    @if($x_coordinate && $y_coordinate)
+                                        <div class="position-absolute bg-danger rounded-circle shadow"
+                                             style="width: 18px; height: 18px; 
+                                                    left: {{ $x_coordinate }}%; top: {{ $y_coordinate }}%; 
+                                                    transform: translate(-50%, -50%); 
+                                                    border: 2.5px solid white; pointer-events: none; z-index: 5;">
+                                        </div>
+                                    @endif
+                                </div>
+                                @error('x_coordinate') <span class="error text-danger d-block mt-1">{{ $message }}</span> @enderror 
+                            </div>
+                        </div>
+                        @endif
+                    </div>
+
                     <div class="row mb-4">
                         <div class="col-sm-4">
                             <label>Luas bangunan</label>
@@ -125,17 +182,16 @@
                         <div class="col-sm-12">
                             <label class="mb-0">Upload Gambar Properti</label>
                             <p class="text-danger mb-0">*maksimal 5 file dan diusahakan ukuran gambar maksimal 660 x 492</p>
-                            <input wire:ignore wire:model="homeImage"  type="file" name="imageSketsa" id="imageSketsa" class="form-control @error('imageSketsa') has-error @enderror" placeholder="image" onchange="previewMulti('.imageDemo', this.files)" multiple>
+                            <input wire:ignore wire:model="homeImage" type="file" name="imageSketsa" id="imageSketsa" class="form-control @error('imageSketsa') has-error @enderror" placeholder="image" onchange="previewMulti('.imageDemo', this.files)" multiple>
                             @error('homeImage') <span class="error text-danger ">{{ $message }}</span> @enderror 
-                            <div wire:ignore class="row mt-3 imageDemo">
-                            </div>                            
+                            <div wire:ignore class="row mt-3 imageDemo"></div>                                       
                         </div>
                     </div>
 
                     <div class="row mb-4">
                         <div class="col-sm-6">
                             <label>Upload Gambar Sketsa</label>
-                            <input wire:ignore wire:model="sketch_image"  type="file" name="imageSketsa" id="imageSketsa" class="form-control @error('imageSketsa') has-error @enderror" placeholder="image" onchange="previewSketsa('.imageDemo1', this.files[0])">
+                            <input wire:ignore wire:model="sketch_image" type="file" name="imageSketsa" id="imageSketsa" class="form-control @error('imageSketsa') has-error @enderror" placeholder="image" onchange="previewSketsa('.imageDemo1', this.files[0])">
                             <div wire:ignore class="col-md mt-3">
                                 <img src="" alt="" class="img-preview img-fluid mb-3 col-sm-5 d-block imageDemo1">
                             </div>
@@ -151,12 +207,14 @@
                         </div>
                     </div>
 
-                    <div class="col-xxl-12 col-sm-4 col-12 mx-auto">
-                        <button type="submit" class="btn btn-success w-100">Simpan</button>
+                    <div class="row mt-4">
+                        <div class="col-xxl-12 col-sm-4 col-12 mx-auto">
+                            <button type="submit" class="btn btn-success w-100">Simpan</button>
+                        </div>
                     </div>
+                    
                     </form>
                 </div>
-                
             </div>
         </div>
     </div>

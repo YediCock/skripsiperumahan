@@ -68,4 +68,31 @@ Admin";
         $this->alert('success', 'Berhasil menghapus booking ini');
         return back();
     }
+
+    public function acceptBooking($id)
+    {
+        // 1. Cari data booking beserta relasi properti dan kategori
+        $booking = Booking::with(['homeList.homeCategory'])->findOrFail($id);
+
+        // 2. Ubah status pesanan menjadi 'accept'
+        $booking->status = 'accept';
+        $booking->save();
+
+        // 3. Sinkronisasi: Ubah status properti
+        if ($booking->homeList) {
+            $homeList = $booking->homeList;
+            
+            // Cek apakah kategorinya sewa dengan lebih aman
+            $isSewa = ($homeList->homeCategory && $homeList->homeCategory->slug == 'sewa');
+            
+            // Tentukan status ('tersewa' atau 'terjual')
+            $homeList->status = $isSewa ? 'tersewa' : 'terjual';
+            
+            // Paksa simpan ke database menggunakan save()
+            $homeList->save();
+        }
+
+        // 4. Berikan notifikasi sukses ke Admin
+        $this->alert('success', 'Pesanan berhasil di-ACC. Status properti otomatis menjadi ' . strtoupper($homeList->status ?? ''));
+    }
 }

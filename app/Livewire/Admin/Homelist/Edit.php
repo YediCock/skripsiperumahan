@@ -25,6 +25,8 @@ class Edit extends Component
     public $id;
     public $homes;
     public $availableBlocks = [];
+    public $x_coordinate, $y_coordinate;
+    public $selectedCategoryData;
     public function mount($id)
     {
         // Ambil data rumah dari database berdasarkan ID
@@ -43,6 +45,9 @@ class Edit extends Component
             $this->desc       = $this->homes->desc;
             $this->block_id   = $this->homes->block_id;
             $this->unit_number = $this->homes->unit_number;
+            $this->x_coordinate = $this->homes->x_coordinate;
+            $this->y_coordinate = $this->homes->y_coordinate;
+            $this->selectedCategoryData = HomeCategory::find($this->homes->category_id);
 
             $value = $this->homes->price ?? '';
             $this->price = preg_replace('/[^0-9]/', '', $value);
@@ -55,6 +60,7 @@ class Edit extends Component
     {
         $this->availableBlocks = Block::where('home_category_id', $value)->get();
         $this->block_id = null;
+        $this->selectedCategoryData = HomeCategory::find($value);
     }
     public function deleteImage($idImage)
     {
@@ -89,6 +95,8 @@ class Edit extends Component
             'floorplan' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'block_id' => 'nullable|exists:blocks,id',
             'unit_number' => 'nullable|string|max:20',
+            'x_coordinate' => 'nullable|numeric',
+            'y_coordinate' => 'nullable|numeric',
         ]);
 
         if ($validatedData) {
@@ -112,6 +120,8 @@ class Edit extends Component
             $home->desc        = $this->desc;
             $home->block_id    = $this->block_id ?: null;
             $home->unit_number = $this->unit_number ?: null;
+            $home->x_coordinate = $this->x_coordinate;
+            $home->y_coordinate = $this->y_coordinate;
 
             // Cek apakah ada perubahan pada gambar sketch
             if ($this->sketch_image) {

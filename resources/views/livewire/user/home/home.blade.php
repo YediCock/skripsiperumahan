@@ -197,7 +197,12 @@
             @foreach ($CategorySelainSewa as $homeList)
                 <div data-aos="fade-up" data-aos-anchor-placement="top-bottom" class="rounded-[20px] bg-new-100 transition-all duration-300 ease-in-out hover:shadow-shadow7">
                     <div class="group relative h-auto w-full overflow-hidden rounded-t-[20px]">
-                        <div class="absolute right-0 top-0 z-10 rounded-tr-[20px] bg-primary px-3.5 py-1.5 font-semibold text-white uppercase">
+                        <div class="absolute right-0 top-0 z-10 rounded-tr-[20px] px-3.5 py-1.5 font-semibold text-white uppercase 
+                            @if($homeList->status == 'dijual') bg-blue-600 
+                            @elseif($homeList->status == 'terjual') bg-red-600 
+                            @elseif($homeList->status == 'sewa') bg-green-600 
+                            @elseif($homeList->status == 'tersewa') bg-yellow-600 
+                            @else bg-primary @endif">
                             {{ $homeList->status }}
                         </div>
                         @if($homeList->block && $homeList->unit_number)
